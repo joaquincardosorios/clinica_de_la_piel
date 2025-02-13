@@ -23,3 +23,5 @@ yarn-error.log*
 
 # Dependencias de sistemas de paquetes globales
 npm/
+
+docker-compose.yml
