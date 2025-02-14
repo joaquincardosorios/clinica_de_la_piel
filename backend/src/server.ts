@@ -1,15 +1,15 @@
 import express from 'express'
-import dotenv from 'dotenv'
 import cors from 'cors'
 import morgan from 'morgan'
+import dotenv from 'dotenv'
 
 import { corsConfig } from './config/cors'
-// import { connectDB } from './config/db'
-// import authRoutes from './routes/authRoutes'
-// import projectRoutes from './routes/projectRoutes'
-
+import { connectDB } from './config/db'
+import routes from './routes/index'
 dotenv.config()
-// connectDB()
+
+connectDB()
+
 
 const app = express()
 app.use(cors(corsConfig))
@@ -20,12 +20,13 @@ app.use(morgan('dev'))
 // Read data from forms
 app.use(express.json())
 
-app.get("/", (req, res) => {
+// Enrutador
+app.use('/api',routes)
+
+app.get("/ping", (req, res) => {
     res.send("Servidor backend funcionando 🚀");
 });
 
-// Routes
-// app.use('/api/auth', authRoutes)
-// app.use('/api/projects', projectRoutes)
+
 
 export default app
