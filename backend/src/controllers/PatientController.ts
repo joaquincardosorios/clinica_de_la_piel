@@ -26,4 +26,37 @@ export class PatientController {
         const { patient } = req
         res.send(patient)
     }
+
+    static updatePatient = async (req: Request, res: Response) => {
+        const { patient } = req
+
+        patient.rut = req.body.rut
+        patient.names = req.body.names
+        patient.last_names = req.body.last_names
+        patient.dob = req.body.dob
+        patient.address = req.body.address
+        patient.city = req.body.city
+        patient.prevision = req.body.prevision
+        patient.phone = req.body.phone
+        patient.email = req.body.email
+
+        try {
+            await patient.save()
+            res.send('Paciente actualizado con exito')
+        } catch (error) {
+            handleError(res, error, "Failed to update the patient")
+        }
+
+    }
+
+    static deletePatient = async (req: Request, res: Response) => {
+        const { patient } = req
+        try {
+            await patient.deleteOne()
+            res.send('Paciente eliminado con exito')
+        }catch (error) {
+            handleError(res, error, "Failed to update the patient")
+        }
+    }
+            
 }

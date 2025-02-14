@@ -1,6 +1,11 @@
-import { Model, DataType, DataTypes} from 'sequelize'
-import { db } from '../config/db'
-import { v4 as uuidv4 } from 'uuid'
+import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
+
+export interface IAppointment extends Document {
+    patientId: Types.ObjectId
+    date: Date
+    status: string
+    notes: string
+}
 
 class Appointment extends Model {
     public id!: string

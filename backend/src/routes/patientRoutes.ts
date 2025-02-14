@@ -5,13 +5,9 @@ import { patientAlreadyExist, patientExist } from '../middlewares/patients'
 
 const router = Router()
 
-
-// Validate projectId inputs
-router.param('patientId',validatePatientIdType)
+router.param('patientId',validatePatientIdType) // Validate patientId input
 router.param('patientId',handleInputErrors)
-
-// Validate project exist
-router.param('patientId', patientExist)
+router.param('patientId', patientExist) // Validate patient exist
 
 // Crear paciente
 router.post('/', 
@@ -32,6 +28,16 @@ router.get('/:patientId',
 )
 
 // Actualizar paciente
+router.put('/:patientId',
+    validatePatientForm,
+    handleInputErrors,
+    PatientController.updatePatient
+)
+
+// Eliminar paciente
+router.delete('/:patientId', 
+    PatientController.deletePatient
+)
 
 
 

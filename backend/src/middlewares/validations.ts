@@ -19,7 +19,10 @@ const capitalize = (value: string) => {
 };
 
 export const validatePatientIdType = param('patientId')
-    .isMongoId().withMessage('ID no válido');
+    .isMongoId().withMessage('ID no válido')
+
+export const validateTreatmentBaseIdType = param('treatmentBaseId')
+    .isMongoId().withMessage('ID no válido')
 
 export const validatePatientForm: ValidationChain[] = [
     body('rut').trim()
@@ -60,4 +63,26 @@ export const validatePatientForm: ValidationChain[] = [
         .optional()
         .isEmail().withMessage('El formato del correo electrónico no es válido')
 
+]
+
+export const validateTreatmentBaseForm: ValidationChain[] = [
+    body('name').trim()
+        .notEmpty().withMessage('Nombre del tratamiento requerido'),
+    body('basePrice')
+        .isNumeric().withMessage('Precio debe ser un número')
+        .isInt({ gt: 0 }).withMessage("El precio debe ser mayor a cero"),
+    body('baseSessions')
+        .isNumeric().withMessage('Número de sesiones debe ser un numero')
+        .isInt({ gt: 0 }).withMessage("El numero de sesiones debe ser mayor a cero"),
+    body('sessionDuration')
+        .isArray().withMessage('El formato de la duracion de sesiones no es válido')
+        .custom((value, { req }) => {
+            if (value.length !== req.body.baseSessions) {
+                throw new Error("La cantidad de duraciones debe coincidir con el número de sesiones");
+            }
+            return true;
+        }),
+    body("sessionDuration.*")
+        .isInt({ gt: 0 }).withMessage("Cada sesión debe tener una duración mayor a cero"),
+    
 ]
