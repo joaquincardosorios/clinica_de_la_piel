@@ -1,13 +1,17 @@
 import { Router } from 'express'
-import { handleInputErrors, validateTreatmentForm, validateTreatmentIdType } from '../middlewares/validations'
+import { handleInputErrors, validatePatientIdType, validateTreatmentForm, validateTreatmentIdType } from '../middlewares/validations'
 import { TreatmentController } from '../controllers/TreatmentController'
 import { serviceExist } from '../middlewares/service'
 import { treatmentExist } from '../middlewares/treatment'
+import { patientExist } from '../middlewares/patients'
 
 const router = Router({ mergeParams: true })
 
+router.use(validatePatientIdType) 
 router.param('treatmentId',validateTreatmentIdType)
-router.param('treatmentId',handleInputErrors)
+router.use(handleInputErrors)
+
+router.use(patientExist)
 router.param('treatmentId', treatmentExist) 
 
 router.post('/',

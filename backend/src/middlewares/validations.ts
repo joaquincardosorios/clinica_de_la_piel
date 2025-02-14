@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction} from 'express'
 import { body, param, ValidationChain, validationResult } from 'express-validator'
 import { validateRut } from '../utils'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 export const handleInputErrors = (req : Request, res: Response, next : NextFunction) => {
     let errors = validationResult(req)
@@ -25,6 +25,9 @@ export const validateServiceIdType = param('serviceId')
     .isMongoId().withMessage('ID no válido')
 
 export const validateTreatmentIdType = param('treatmentId')
+    .isMongoId().withMessage('ID no válido')
+
+export const validateAppointmentIdType = param('appointmentId')
     .isMongoId().withMessage('ID no válido')
 
 export const validatePatientForm: ValidationChain[] = [
@@ -105,4 +108,28 @@ export const validateTreatmentForm: ValidationChain[] = [
     body('discount').optional()
         .isNumeric().withMessage('Descuento debe ser un número')
         .isInt({ gt: 0 }).withMessage("Descuento debe ser mayor a cero"),
+]
+
+export const validateAppointmentForm: ValidationChain[] = [
+    body('date')
+        .isISO8601().withMessage("La fecha y hora deben estar en formato ISO8601 (YYYY-MM-DDTHH:mm:ss.sssZ)")
+        .custom((value) => {
+
+            const fechaEnChile = moment.tz(value, "America/Santiago")
+            const fechaActual = moment().tz("America/Santiago");
+            const hora = fechaEnChile.hours();
+            
+            if (fechaEnChile.isBefore(fechaActual, "minute")) {
+                throw new Error("La fecha y hora no pueden anterior a ahora");
+            }
+
+            if (hora < 8 || hora > 22) {
+                throw new Error("La hora debe estar entre las 08:00 y las 22:00");
+            }
+
+            return true;
+        }),
+    body("status")
+        .isIn(["Pendiente", "Confirmada", "Completada", "Cancelada"])
+        .withMessage("El estado debe ser 'Pendiente', 'Confirmada', 'Completada' o 'Cancelada'")
 ]

@@ -18,6 +18,7 @@ export interface ITreatment extends Document {
     sessionDuration?: number[]
     discount?: number
     status: StatusTreatment
+    appointments: Types.ObjectId[]
 }
 
 const TreatmentSchema = new Schema<ITreatment>({
@@ -59,7 +60,11 @@ const TreatmentSchema = new Schema<ITreatment>({
         enum: Object.values(statusTreatment),
         default: statusTreatment.pending,
         required: true,
-    }
+    },
+    appointments : [{
+        type: Types.ObjectId,
+        ref: 'Appointment',
+    }],
 }, {
     timestamps: true,
 })

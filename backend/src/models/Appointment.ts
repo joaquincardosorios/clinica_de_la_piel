@@ -1,63 +1,79 @@
 import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
+import Treatment from "./Treatment";
+
+const statusAppointment = {
+    pending: 'Pendiente',
+    confirmed: 'Confirmada',
+    completed: 'Completada',
+    canceled: 'Cancelada',
+} as const
+
+export type StatusAppointment = typeof statusAppointment[keyof typeof statusAppointment]
 
 export interface IAppointment extends Document {
-    patient: Types.ObjectId
+    treatment: Types.ObjectId
     date: Date
-    status: string
+    status: StatusAppointment
     notes: string
 }
 
-class Appointment extends Model {
-    public id!: string
-    // public patientId!: string
-    // public specialistId!: string
-    // public tratamientoId!: string
-    public date!: Date
-    public status: string
-    public notes: string
-}
-
-Appointment.init({
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: uuidv4,
-        primaryKey: true
+const AppointmentSchema = new Schema<IAppointment>({
+    treatment: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Treatment', 
+        required: true 
     },
-    // patientId: {
-    //     type: DataTypes.STRING,
-    //     allowNull: false,
-    //     references: {
-    //         model: 'Patient',
-    //         key: 'id'
-    //     }
-    // },
-    // specialistId: {
-    //     type: DataTypes.UUID,
-    //     allowNull: false,
-    //     references: {
-    //       model: 'specialists', 
-    //       key: 'id',
-    //     },
-    // },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
+    date : {
+        type: Date,
+        required: true,
     },
     status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'scheduled'
+        type: String,
+        enum: Object.values(statusAppointment),
+        default: statusAppointment.pending,
+        required: true,
     },
     notes: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    }},
-    {
-        sequelize: db,
-        modelName: 'Appointment',
-        tableName: 'appointments',
-        timestamps: true,
+        type: String,
+        required: false,
+        trim: true
     }
-)
+}, { timestamps : true} )
 
+AppointmentSchema.pre('save', async function (next) {
+    try {
+        if (!this.isNew) return
+        
+        const treatment = await Treatment.findById(this.treatment)
+        if(!treatment) {
+            return next(new Error('Tratamiento no encontrado'))
+        }
+    
+        const appointmentCount = treatment.appointments.length
+        if (appointmentCount >= treatment.finalSessions){
+            return next(new Error(`No se pueden agregar más citas. Se alcanzó el límite de ${treatment.finalSessions} citas.`))
+        }
+        next()
+    } catch (error) {
+        next(error)
+    }
+})
+
+AppointmentSchema.post('save', async function (appointment) {
+    try {
+        const treatment = await Treatment.findById(appointment.treatment)
+        if(treatment){
+            if(!treatment.appointments.includes(appointment.id)){
+                treatment.appointments.push(appointment.id)
+                await treatment.save()
+            }
+        }
+    } catch (error) {
+        console.error("Error actualizando el paciente con el tratamiento:", error);
+    }
+
+})
+
+
+const Appointment = mongoose.model<IAppointment>('Appointment', AppointmentSchema)
 export default Appointment
