@@ -3,7 +3,7 @@ import { PatientController } from '../controllers/PatientController'
 import { handleInputErrors, validatePatientForm, validatePatientIdType } from '../middlewares/validations'
 import { patientAlreadyExist, patientExist } from '../middlewares/patients'
 
-const router = Router()
+const router = Router({ mergeParams: true })
 
 router.param('patientId',validatePatientIdType) // Validate patientId input
 router.param('patientId',handleInputErrors)

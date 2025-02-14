@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import Patient from '../src/models/Patient'
-import TreatmentBase from '../src/models/Service'
+import Service from '../src/models/Service'
+import Treatment from '../src/models/Treatment'
 
 dotenv.config();
 
@@ -63,7 +64,7 @@ const patients = [
     },
 ];
 
-const treatmentsBase = [
+const services = [
     {
         name : "Limpieza facial",
         basePrice : 45000,
@@ -90,22 +91,90 @@ const treatmentsBase = [
     },
 ]
 
+const treatments = [
+    {
+        patient : null,
+        service : null,
+        finalPrice : 0,
+        finalSessions : 0,
+        sessionDuration : [0],
+        discount : 10000
+    },
+    {
+        patient : null,
+        service : null,
+        finalPrice : 0,
+        finalSessions : 0,
+        sessionDuration : [0],
+        discount: 0
+    },
+    {
+        patient : null,
+        service : null,
+        finalPrice : 0,
+        finalSessions : 0,
+        sessionDuration : [0],
+        discount : 10000
+    },
+    {
+        patient : null,
+        service : null,
+        finalPrice : 0,
+        finalSessions : 0,
+        sessionDuration : [0],
+        discount : 10000
+    },
+]
+
 const seedDB = async () => {
     try {
         await mongoose.connect(process.env.DB_URI as string)
         console.log('📦 Conectado a MongoDB')
 
+        await Treatment.deleteMany();
+        console.log('🗑️ Tratamientos eliminados')
+
         await Patient.deleteMany();
         console.log('🗑️ Pacientes eliminados')
 
-        await TreatmentBase.deleteMany();
+        await Service.deleteMany();
         console.log('🗑️ Servicios eliminados')
 
-        await Patient.insertMany(patients);
+        const patientsCreated = await Patient.insertMany(patients);
         console.log('✅ Pacientes insertados correctamente')
 
-        await TreatmentBase.insertMany(treatmentsBase);
+        const servicesCreated = await Service.insertMany(services);
         console.log('✅ Servicios insertados correctamente')
+
+        
+        treatments[0].patient = patientsCreated[0].id
+        treatments[0].service = servicesCreated[0].id
+        treatments[0].finalPrice = servicesCreated[0].basePrice - treatments[0].discount
+        treatments[0].finalSessions = servicesCreated[0].baseSessions
+        treatments[0].sessionDuration = servicesCreated[0].sessionDuration
+        
+        treatments[1].patient = patientsCreated[1].id
+        treatments[1].service = servicesCreated[0].id
+        treatments[1].finalPrice = servicesCreated[0].basePrice - treatments[1].discount
+        treatments[1].finalSessions = servicesCreated[0].baseSessions
+        treatments[1].sessionDuration = servicesCreated[0].sessionDuration
+        
+        treatments[2].patient = patientsCreated[1].id
+        treatments[2].service = servicesCreated[3].id
+        treatments[2].finalPrice = servicesCreated[3].basePrice - treatments[2].discount
+        treatments[2].finalSessions = servicesCreated[3].baseSessions
+        treatments[2].sessionDuration = servicesCreated[3].sessionDuration
+        
+        treatments[3].patient = patientsCreated[1].id
+        treatments[3].service = servicesCreated[2].id
+        treatments[3].finalPrice = servicesCreated[2].basePrice - treatments[3].discount
+        treatments[3].finalSessions = servicesCreated[2].baseSessions
+        treatments[3].sessionDuration = servicesCreated[2].sessionDuration
+
+        const treatmentsCreated = await Treatment.insertMany(treatments);
+        console.log('✅ Tratamientos insertados correctamente')
+
+
 
     } catch (error) {
         console.error('❌ Error en el seed:', error)

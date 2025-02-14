@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
 
 export interface IAppointment extends Document {
-    patientId: Types.ObjectId
+    patient: Types.ObjectId
     date: Date
     status: string
     notes: string

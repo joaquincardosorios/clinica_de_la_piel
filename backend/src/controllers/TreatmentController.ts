@@ -4,59 +4,69 @@ import Treatment from '../models/Treatment'
 
 export class TreatmentController {
     static createTreatment = async (req: Request, res: Response) => {
-        const treatment = new Treatment(req.body)
-        console.log(treatment)
-        // try {
-        //     await treatment.save()
-        //     res.send('Tratamiento creado con exito')
-        // } catch (error) {
-        //     handleError(res, error, "Failed to create the Treatment")
-        // }
+        const { patient, service } = req
+
+        const treatmentForm = { 
+            patient: patient._id,
+            service: service._id,
+            finalPrice: req.body.discount ? service.basePrice - req.body.discount : service.basePrice,
+            finalSessions: req.body.finalSessions ? req.body.finalSessions : service.baseSessions,
+            discount: req.body.discount ? req.body.discount : 0,
+        }
+
+        const treatment = new Treatment(treatmentForm)
+        try {
+            await treatment.save()
+            res.send('Tratamiento creado con exito')
+        } catch (error) {
+            handleError(res, error, "Failed to create the Treatment")
+        }
     }
 
-    // static getAllTreatmentBase = async (req: Request, res: Response) => {
-    //     try {
-    //         const treatmentsBase = await TreatmentBase.find()
-    //         res.send(treatmentsBase)
-    //     } catch (error) {
-    //         handleError(res, error, "Failed to fetch the treatments")
-    //     }
-    // }
+    static getAllTreatment = async (req: Request, res: Response) => {
+        const { patient} = req
+        try {
+            const treatments = await Treatment.find({
+                $and:[ 
+                    { patient: patient.id }
+                ]
+            })
+            res.send(treatments)
+        } catch (error) {
+            handleError(res, error, "Failed to fetch the treatments")
+        }
+    }
 
-    // static getTreatmentBaseById = async (req: Request, res: Response) => {
-    //     const { treatmentBase } = req
-    //     try{
-    //         res.send(treatmentBase)
-    //     } catch (error) {
-    //         handleError(res, error, "Failed to fetch the treatments")
-    //     }
-    // }
+    static getTreatmentById = async (req: Request, res: Response) => {
+        const { treatment } = req
+        res.send(treatment)
+    }
 
-    // static updateTreatmentBase = async (req: Request, res: Response) => {
-    //     const { treatmentBase }  = req
+    static updateTreatment = async (req: Request, res: Response) => {
+        const { treatment }  = req
 
-    //     treatmentBase.name = req.body.name
-    //     treatmentBase.basePrice = req.body.basePrice
-    //     treatmentBase.baseSessions = req.body.baseSessions
-    //     treatmentBase.sessionDuration = req.body.sessionDuration
+        treatment.finalPrice = req.body.finalPrice
+        treatment.finalSessions = req.body.finalSessions
+        treatment.sessionDuration = req.body.sessionDuration
+        treatment.status = req.body.status
 
-    //     try {
-    //         await treatmentBase.save()
-    //         res.send('Tratamiento actualizado con exito')
-    //     } catch (error) {
-    //         handleError(res, error, "Failed to update the treatments")
-    //     }
-    // }
+        try {
+            await treatment.save()
+            res.send('Tratamiento actualizado con exito')
+        } catch (error) {
+            handleError(res, error, "Failed to update the treatment")
+        }
+    }
 
-    // static deleteTreatmentBase = async (req: Request, res: Response) => {
-    //     const { treatmentBase } = req
-    //     try {
-    //         await treatmentBase.deleteOne()
-    //         res.send('Tratamiento eliminado con exito')
-    //     }catch (error) {
-    //         handleError(res, error, "Failed to delete the treatments")
-    //     }
-    // }
+    static deleteTreatment = async (req: Request, res: Response) => {
+        const { treatment } = req
+        try {
+            await treatment.deleteOne()
+            res.send('Tratamiento eliminado con exito')
+        }catch (error) {
+            handleError(res, error, "Failed to delete the treatment")
+        }
+    }
 
 
 }

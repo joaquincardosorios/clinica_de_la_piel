@@ -1,18 +1,18 @@
 import { Router } from 'express'
-import { handleInputErrors, validateTreatmentBaseForm, validateTreatmentBaseIdType } from '../middlewares/validations'
+import { handleInputErrors, validateServiceForm, validateServiceIdType } from '../middlewares/validations'
 import Service from '../models/Service'
 import { ServiceController } from '../controllers/ServiceController'
 import { serviceExist } from '../middlewares/service'
 
 const router = Router()
 
-router.param('treatmentBaseId',validateTreatmentBaseIdType) 
-router.param('treatmentBaseId',handleInputErrors)
-router.param('treatmentBaseId',serviceExist)
+router.param('serviceId',validateServiceIdType) 
+router.param('serviceId',handleInputErrors)
+router.param('serviceId',serviceExist)
 
 // Crear tratamiento base
 router.post('/', 
-    validateTreatmentBaseForm,
+    validateServiceForm,
     handleInputErrors,
     ServiceController.createService
 )
@@ -23,22 +23,20 @@ router.get('/',
 )
 
 // Obtener paciente por ID
-router.get('/:treatmentBaseId', 
+router.get('/:serviceId', 
     ServiceController.getServiceById
 )
 
 // Actualizar paciente
-router.put('/:treatmentBaseId',
-    validateTreatmentBaseForm,
+router.put('/:serviceId',
+    validateServiceForm,
     handleInputErrors,
     ServiceController.updateService
 )
 
 // Eliminar paciente
-router.delete('/:treatmentBaseId', 
+router.delete('/:serviceId', 
     ServiceController.deleteService
 )
-
-
 
 export default router

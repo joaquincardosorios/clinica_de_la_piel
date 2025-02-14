@@ -21,7 +21,10 @@ const capitalize = (value: string) => {
 export const validatePatientIdType = param('patientId')
     .isMongoId().withMessage('ID no válido')
 
-export const validateTreatmentBaseIdType = param('treatmentBaseId')
+export const validateServiceIdType = param('serviceId')
+    .isMongoId().withMessage('ID no válido')
+
+export const validateTreatmentIdType = param('treatmentId')
     .isMongoId().withMessage('ID no válido')
 
 export const validatePatientForm: ValidationChain[] = [
@@ -65,7 +68,7 @@ export const validatePatientForm: ValidationChain[] = [
 
 ]
 
-export const validateTreatmentBaseForm: ValidationChain[] = [
+export const validateServiceForm: ValidationChain[] = [
     body('name').trim()
         .notEmpty().withMessage('Nombre del tratamiento requerido'),
     body('basePrice')
@@ -88,10 +91,18 @@ export const validateTreatmentBaseForm: ValidationChain[] = [
 ]
 
 export const validateTreatmentForm: ValidationChain[] = [
-    body('patientId')
-        .isMongoId().withMessage('ID del paciente no válido'),
-    body('treatmentBaseId')
-        .isMongoId().withMessage('ID del tratamiento no válido')
-    
-    
+    body('serviceId')
+        .isMongoId().withMessage('ID del tratamiento no válido'),
+    body('finalPrice').optional()
+        .isNumeric().withMessage('Precio debe ser un número')
+        .isInt({ gt: 0 }).withMessage("El precio debe ser mayor a cero"),
+    body('finalSessions').optional()
+        .isNumeric().withMessage('Numero de sesiones debe ser un número')
+        .isInt({ gt: 0 }).withMessage("Numero de sesiones debe ser mayor a cero"),
+    body('sessionDuration').optional()
+        .isNumeric().withMessage('Numero de sesiones debe ser un número')
+        .isInt({ gt: 0 }).withMessage("Numero de sesiones debe ser mayor a cero"),
+    body('discount').optional()
+        .isNumeric().withMessage('Descuento debe ser un número')
+        .isInt({ gt: 0 }).withMessage("Descuento debe ser mayor a cero"),
 ]

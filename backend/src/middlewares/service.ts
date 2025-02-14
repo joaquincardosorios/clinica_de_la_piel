@@ -11,7 +11,8 @@ declare global {
 
 
 export async function serviceExist(req: Request, res: Response, next: NextFunction){
-    const { serviceId } = req.params || req.body
+    const serviceId = req.params.serviceId || req.body.serviceId
+    console.log(req.patient)
     try {
         const service = await Service.findById(serviceId)
         if(!service){
