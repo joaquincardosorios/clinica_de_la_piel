@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface ITreatmentBase extends Document {
+export interface IService extends Document {
     name: string
     // specialist: string
     basePrice: number
@@ -8,7 +8,7 @@ export interface ITreatmentBase extends Document {
     sessionDuration: number[]
 }
 
-const TreatmentBaseSchema = new Schema<ITreatmentBase>({
+const ServiceSchema = new Schema<IService>({
     name: { type: String, required: true, unique: true },
     // specialist: { type: String, required: true },
     basePrice: { type: Number, required: true },
@@ -25,5 +25,5 @@ const TreatmentBaseSchema = new Schema<ITreatmentBase>({
     },
 })
 
-const TreatmentBase = mongoose.model<ITreatmentBase>('TreatmentBase', TreatmentBaseSchema)
-export default TreatmentBase
+const Service = mongoose.model<IService>('Service', ServiceSchema)
+export default Service

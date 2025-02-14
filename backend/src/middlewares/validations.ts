@@ -86,3 +86,12 @@ export const validateTreatmentBaseForm: ValidationChain[] = [
         .isInt({ gt: 0 }).withMessage("Cada sesión debe tener una duración mayor a cero"),
     
 ]
+
+export const validateTreatmentForm: ValidationChain[] = [
+    body('patientId')
+        .isMongoId().withMessage('ID del paciente no válido'),
+    body('treatmentBaseId')
+        .isMongoId().withMessage('ID del tratamiento no válido')
+    
+    
+]

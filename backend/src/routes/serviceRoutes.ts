@@ -1,44 +1,42 @@
 import { Router } from 'express'
-import { PatientController } from '../controllers/PatientController'
 import { handleInputErrors, validateTreatmentBaseForm, validateTreatmentBaseIdType } from '../middlewares/validations'
-import { patientAlreadyExist, patientExist } from '../middlewares/patients'
-import TreatmentBase from '../models/TreatmentBase'
-import { TreatmentBaseController } from '../controllers/TreatmentBaseController'
-import { treatmentBaseExist } from '../middlewares/treatmentBase'
+import Service from '../models/Service'
+import { ServiceController } from '../controllers/ServiceController'
+import { serviceExist } from '../middlewares/service'
 
 const router = Router()
 
 router.param('treatmentBaseId',validateTreatmentBaseIdType) 
 router.param('treatmentBaseId',handleInputErrors)
-router.param('treatmentBaseId',treatmentBaseExist)
+router.param('treatmentBaseId',serviceExist)
 
 // Crear tratamiento base
 router.post('/', 
     validateTreatmentBaseForm,
     handleInputErrors,
-    TreatmentBaseController.createTreatmentBase
+    ServiceController.createService
 )
 
 // Obtener tratamiento base
 router.get('/', 
-    TreatmentBaseController.getAllTreatmentBase
+    ServiceController.getAllServices
 )
 
 // Obtener paciente por ID
 router.get('/:treatmentBaseId', 
-    TreatmentBaseController.getTreatmentBaseById
+    ServiceController.getServiceById
 )
 
 // Actualizar paciente
 router.put('/:treatmentBaseId',
     validateTreatmentBaseForm,
     handleInputErrors,
-    TreatmentBaseController.updateTreatmentBase
+    ServiceController.updateService
 )
 
 // Eliminar paciente
 router.delete('/:treatmentBaseId', 
-    TreatmentBaseController.deleteTreatmentBase
+    ServiceController.deleteService
 )
 
 

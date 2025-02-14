@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import Patient from '../src/models/Patient'; // Asegúrate de importar tu modelo
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+import Patient from '../src/models/Patient'
+import TreatmentBase from '../src/models/Service'
 
 dotenv.config();
 
@@ -62,22 +63,55 @@ const patients = [
     },
 ];
 
+const treatmentsBase = [
+    {
+        name : "Limpieza facial",
+        basePrice : 45000,
+        baseSessions : 3,
+        sessionDuration : [60, 60, 60]
+    },
+    {
+        name : "Servicios podoglogicos",
+        basePrice : 12000,
+        baseSessions : 1,
+        sessionDuration : [60]
+    },
+    {
+        name : "Consulta medica general",
+        basePrice : 35000,
+        baseSessions : 1,
+        sessionDuration : [20]
+    },
+    {
+        name : "Borrado de tatuajes",
+        basePrice : 150000,
+        baseSessions : 5,
+        sessionDuration : [30, 30, 30, 30,30]
+    },
+]
+
 const seedDB = async () => {
     try {
-        await mongoose.connect(process.env.DB_URI as string);
-        console.log('📦 Conectado a MongoDB');
+        await mongoose.connect(process.env.DB_URI as string)
+        console.log('📦 Conectado a MongoDB')
 
-        await Patient.deleteMany(); // Borra todos los datos previos
-        console.log('🗑️ Pacientes eliminados');
+        await Patient.deleteMany();
+        console.log('🗑️ Pacientes eliminados')
+
+        await TreatmentBase.deleteMany();
+        console.log('🗑️ Servicios eliminados')
 
         await Patient.insertMany(patients);
-        console.log('✅ Pacientes insertados correctamente');
+        console.log('✅ Pacientes insertados correctamente')
 
-        mongoose.connection.close();
-        console.log('🔌 Conexión cerrada');
+        await TreatmentBase.insertMany(treatmentsBase);
+        console.log('✅ Servicios insertados correctamente')
+
     } catch (error) {
-        console.error('❌ Error en el seed:', error);
-        mongoose.connection.close();
+        console.error('❌ Error en el seed:', error)
+    } finally {
+        mongoose.connection.close()
+        console.log('🔌 Conexión cerrada')
     }
 };
 

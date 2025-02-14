@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Types, PopulatedDoc } from "mongoose";
 
 const prevision = {
-    FONASA: 'Fonosa',
+    FONASA: 'Fonasa',
     ISAPRE: 'Isapre',
     PARTICULAR: 'Particular',
 } as const

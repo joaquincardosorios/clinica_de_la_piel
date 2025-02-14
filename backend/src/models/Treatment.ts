@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Types } from 'mongoose';
 
 interface ITreatment extends Document {
     patientId: Types.ObjectId
-    baseTreatmentId: Types.ObjectId
+    treatmentBaseId: Types.ObjectId
     finalPrice: number
     finalSessions: number
     sessionDuration: number
@@ -15,7 +15,7 @@ const TreatmentSchema = new Schema<ITreatment>({
         ref: 'Patient', 
         required: true 
     },
-    baseTreatmentId: { 
+    treatmentBaseId: { 
         type: Schema.Types.ObjectId, 
         ref: 'TreatmentBase', 
         required: true 

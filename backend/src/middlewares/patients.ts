@@ -25,7 +25,7 @@ export async function patientAlreadyExist(req: Request, res: Response, next: Nex
 }
 
 export async function patientExist(req: Request, res: Response, next: NextFunction){
-    const { patientId } = req.params
+    const { patientId } = req.params || req.body
     try {
         const patient = await Patient.findById(patientId)
         if(!patient){
