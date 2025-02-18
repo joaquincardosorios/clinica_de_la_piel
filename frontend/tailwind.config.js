@@ -12,6 +12,7 @@ export default {
     extend: {
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],
+        sans: ["Open Sans"]
       },
       colors: {
         light: '#F8F4F9', 
@@ -25,7 +26,10 @@ export default {
           DEFAULT: '#A0D8B3', 
           hover: '#89B999',
         },
-      }
+      },
+      gridTemplateColumns: {
+        "1/5": "1fr 5fr"
+      },
     },
   },
   plugins: [ mtConfig ],

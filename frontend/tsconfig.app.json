@@ -18,6 +18,8 @@
       "@/locales/*": ["locales/*"],
       "@/hooks/*": ["hooks/*"]
     },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

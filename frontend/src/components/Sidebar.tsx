@@ -8,13 +8,15 @@ import {
   CalendarDaysIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline'
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
+import { useMediaQuery } from 'react-responsive'
 
 type SidebarProps = {
   children: React.ReactNode;
 }
 
 export default function Sidebar({children} : SidebarProps) {
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
   const [open, setOpen] = useState(true);
   const Menus = [
     { title: "Calendario", icon: <CalendarIcon className="w-7"/> , to: '/'},
@@ -25,6 +27,7 @@ export default function Sidebar({children} : SidebarProps) {
     { title: "Opciones", icon: <Cog6ToothIcon className="w-7"/> , gap: true, to: '/opciones'},
   ];
 
+  if(isMobile ) return <div className="flex flex-1 overflow-hidden">{children}</div>
   return (
     <div className="flex flex-1 overflow-hidden">
       <div
@@ -69,7 +72,7 @@ export default function Sidebar({children} : SidebarProps) {
           ))}
         </ul>
       </div>
-      <div className="">
+      <div className="w-full">
         {children}
       </div>
     </div>

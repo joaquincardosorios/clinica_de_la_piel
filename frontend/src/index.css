@@ -2,18 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-.rbc-calendar {
-    @apply bg-primary
+.fc {
+  @apply max-w-[1000px] mx-auto border p-5 rounded-lg shadow-lg bg-white;
 }
-/* 
-.rbc-header {
-    @apply text-lg font-semibold text-blue-600 p-5;
-} */
 
-.rbc-day-bg {
-    @apply bg-white border rounded-lg;
-  }
+.fc-toolbar-title {
+  @apply capitalize
+}
 
-  .rbc-day-selected {
-    @apply bg-blue-500 text-white;
-  }
+.fc-col-header-cell-cushion {
+  @apply capitalize
+}
