@@ -5,6 +5,7 @@
 # Archivos de entorno
 /frontend/.env
 /backend/.env
+.env
 
 # Archivos generados por el compilador
 /frontend/dist
@@ -25,3 +26,5 @@ yarn-error.log*
 npm/
 
 docker-compose.yml
+
+database/db/

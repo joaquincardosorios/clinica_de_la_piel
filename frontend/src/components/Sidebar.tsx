@@ -26,11 +26,11 @@ export default function Sidebar({children} : SidebarProps) {
   ];
 
   return (
-    <div className="flex">
+    <div className="flex flex-1 overflow-hidden">
       <div
         className={` ${
           open ? "w-72" : "w-20 "
-        } bg-dark h-screen p-5  pt-8 relative duration-300`}
+        } bg-dark h-full p-5  pt-8 relative duration-300`}
       >
         <ChevronRightIcon
           className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark bg-white
@@ -69,7 +69,7 @@ export default function Sidebar({children} : SidebarProps) {
           ))}
         </ul>
       </div>
-      <div className="h-screen flex-1 p-7">
+      <div className="">
         {children}
       </div>
     </div>

@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.rbc-calendar {
+    @apply bg-primary
+}
+/* 
+.rbc-header {
+    @apply text-lg font-semibold text-blue-600 p-5;
+} */
+
+.rbc-day-bg {
+    @apply bg-white border rounded-lg;
+  }
+
+  .rbc-day-selected {
+    @apply bg-blue-500 text-white;
+  }

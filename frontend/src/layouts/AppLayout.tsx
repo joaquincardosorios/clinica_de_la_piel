@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 export default function AppLayout() {
   return (
     <div
-      className=""
+      className="flex flex-col h-screen"
     >
       <header
         className="bg-primary py-3 text-center text-text font-bold text-xl"
