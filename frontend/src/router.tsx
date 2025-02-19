@@ -1,6 +1,7 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import AppLayout from './layouts/AppLayout'
 import DashboardView from './views/DashboardView'
+import PatientListView from './views/patients/PatientListView'
 
 export default function Router(){
     return(
@@ -12,7 +13,7 @@ export default function Router(){
                     <Route path='/citas/:citaId' element={<DashboardView />}/>
                     <Route path='/citas/:citaId/edit' element={<DashboardView />}/>
                     <Route path='/pacientes/crear' element={<DashboardView />}/>
-                    <Route path='/pacientes' element={<DashboardView />}/>
+                    <Route path='/pacientes' element={<PatientListView />}/>
                     <Route path='/pacientes/:pacienteId' element={<DashboardView />}/>
                     <Route path='/pacientes/:pacienteId/edit' element={<DashboardView />}/>
                     <Route path='/ingresos' element={<DashboardView />}/>
