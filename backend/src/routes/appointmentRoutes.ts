@@ -5,7 +5,7 @@ import { treatmentExist } from '../middlewares/treatment'
 import { patientExist } from '../middlewares/patients'
 import { appointmentExist } from '../middlewares/appointment'
 
-const router = Router({ mergeParams: true })
+const router = Router()
 
 router.use(validatePatientIdType) 
 router.use(validateTreatmentIdType)

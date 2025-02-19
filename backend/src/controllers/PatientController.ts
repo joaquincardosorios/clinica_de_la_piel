@@ -15,8 +15,48 @@ export class PatientController {
 
     static getPatients = async (req: Request, res: Response) => {
         try {
-            const patients = await Patient.find()
-            res.send(patients)
+            const { rut = '', last_names = '', page = 1, limit= 10 } = req.query
+
+            const skip = (Number(page) - 1) * Number(limit)
+            const limitInt = Number(limit)
+
+            const query = {}
+            if(rut) {
+                query['rut'] = { $regex: `^${rut}`, $options: 'i' }
+            }
+
+            if(last_names) {
+                query['last_names'] = { $regex: `^${last_names}`, $options: 'i' }
+            }
+            // const patients = await Patient.find(query)
+            //     .skip(skip)
+            //     .limit(limitInt)
+            //     .sort({ last_names: 1, names: 1 })
+            
+            
+            // const totalPatients = await Patient.countDocuments(query)
+            const [patientsResult, totalPatientsResult] = await Promise.allSettled([
+                Patient.find(query)
+                    .skip(skip)
+                    .limit(limitInt)
+                    .sort({ last_names: 1, names: 1 }),
+                Patient.countDocuments(query)
+            ])
+
+            if (patientsResult.status === 'rejected' || totalPatientsResult.status === 'rejected') {
+                res.status(500).send({
+                    error: 'Hubo un error al obtener los datos de los pacientes',
+                })
+                return
+            }  
+
+            const patients = patientsResult.value;
+            const totalPatients = totalPatientsResult.value;
+            res.send({
+                patients,
+                totalPages: Math.ceil(totalPatients / limitInt),
+                totalPatients,
+            })
         } catch (error) {
             handleError(res, error, "Failed to fetch the patients")
         }

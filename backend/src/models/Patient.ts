@@ -77,6 +77,9 @@ const PatientSchema: Schema = new Schema({
     timestamps: true,
 })
 
+PatientSchema.index({ rut: 1 });
+PatientSchema.index({ last_names: 1 })
+
 const Patient = mongoose.model<IPatient>('Patient', PatientSchema)
 
 export default Patient
